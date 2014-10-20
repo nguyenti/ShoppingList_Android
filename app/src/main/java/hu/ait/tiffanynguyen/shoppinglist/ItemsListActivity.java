@@ -1,11 +1,14 @@
 package hu.ait.tiffanynguyen.shoppinglist;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ListActivity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -18,8 +21,8 @@ import hu.ait.tiffanynguyen.shoppinglist.data.Item;
 
 public class ItemsListActivity extends ListActivity {
 
-    public static final int REQUEST_NEW_PLACE = 100;
-    public static final int CONTEXT_MENU_DELETE = 10;
+    public static final int REQUEST_NEW_ITEM = 100;
+    public static final int DELETE_ITEMS = 10;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,9 +63,28 @@ public class ItemsListActivity extends ListActivity {
             Intent i = new Intent();
             i.setClass(this, CreateNewItemActivity.class);
             // REQUEST... is a request code to get results from a certain activity
-            startActivityForResult(i, REQUEST_NEW_PLACE);
+            startActivityForResult(i, REQUEST_NEW_ITEM);
+            return true;
+        } else if (id == R.id.action_delete_selected) {
+            /*
+            * Deletion adapted from:
+            * https://stackoverflow.com/questions/2558591/remove-listview-items-in-android
+            */
+            AlertDialog.Builder adb=new AlertDialog.Builder(ItemsListActivity.this);
+            adb.setTitle("Delete?");
+            adb.setMessage("Are you sure you want to delete the selected items?");
+            adb.setNegativeButton("Cancel", null);
+            adb.setPositiveButton("Ok", new AlertDialog.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    ((ItemAdapter) getListAdapter()).removeChecked();
+                    ((ItemAdapter) getListAdapter()).notifyDataSetChanged();
+                }});
+            adb.show();
+            ((ItemAdapter) getListAdapter()).notifyDataSetChanged();
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
+
+
 }

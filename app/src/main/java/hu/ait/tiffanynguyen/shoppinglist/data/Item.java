@@ -42,11 +42,11 @@ public class Item implements Serializable {
     private ItemType type;
     private String name;
     private String description;
-    private short quantity;
+    private int quantity;
     private float price;
     private boolean bought;
 
-    public Item(ItemType type, String name, String description, short quantity, float price) {
+    public Item(ItemType type, String name, String description, int quantity, float price) {
         this.type = type;
         this.name = name;
         this.description = description;
@@ -67,7 +67,7 @@ public class Item implements Serializable {
         return description;
     }
 
-    public short getQuantity() {
+    public int getQuantity() {
         return quantity;
     }
 
@@ -77,5 +77,9 @@ public class Item implements Serializable {
 
     public boolean isBought() {
         return bought;
+    }
+
+    public void setBought(boolean bought) {
+        this.bought = bought;
     }
 }

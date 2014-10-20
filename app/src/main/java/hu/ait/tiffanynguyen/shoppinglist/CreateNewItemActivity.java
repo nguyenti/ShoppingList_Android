@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import java.util.Date;
 
@@ -41,13 +42,20 @@ public class CreateNewItemActivity extends Activity {
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intentResult = new Intent();
-                intentResult.putExtra("KEY_ITEM",
-                        new Item(Item.ItemType.fromInt(spinnerItemType.getSelectedItemPosition()), etItem.getText().toString(),
-                                etItemDesc.getText().toString(), Short.parseShort(etItemQuantity.getText().toString()),
-                                Float.parseFloat(etItemPrice.getText().toString())));
-                setResult(RESULT_OK, intentResult);
-                finish();
+                try {
+                    Intent intentResult = new Intent();
+                    if (etItem.getText().toString().matches(""))
+                        throw new Exception();
+                    intentResult.putExtra("KEY_ITEM",
+                            new Item(Item.ItemType.fromInt(spinnerItemType.getSelectedItemPosition()), etItem.getText().toString(),
+                                    etItemDesc.getText().toString(), Integer.parseInt(etItemQuantity.getText().toString()),
+                                    Float.parseFloat(etItemPrice.getText().toString())));
+                    setResult(RESULT_OK, intentResult);
+                    finish();
+
+                } catch (Exception e) {
+                    Toast.makeText(getApplicationContext(), "Please enter valid fields", Toast.LENGTH_LONG).show();
+                }
             }
         });
     }

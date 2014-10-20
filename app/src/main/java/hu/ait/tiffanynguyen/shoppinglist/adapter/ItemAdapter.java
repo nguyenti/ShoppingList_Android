@@ -1,10 +1,14 @@
 package hu.ait.tiffanynguyen.shoppinglist.adapter;
 
 import android.content.Context;
+import android.content.res.Resources;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -45,10 +49,21 @@ public class ItemAdapter extends BaseAdapter {
         itemsList.add(p);
     }
 
+    public void removeChecked() {
+        int size = itemsList.size();
+        for (int i = 0; i < size; i++) {
+            if (itemsList.get(i).isBought()) {
+                itemsList.remove(i--);
+                size--;
+            }
+        }
+    }
+
     public static class ViewHolder {
         ImageView ivIcon;
         TextView tvName;
         TextView tvQuantity;
+        CheckBox cbBought;
     }
 
     @Override
@@ -63,16 +78,28 @@ public class ItemAdapter extends BaseAdapter {
             holder.ivIcon = (ImageView) v.findViewById(R.id.ivIcon);
             holder.tvQuantity = (TextView) v.findViewById(R.id.tvQuantity);
             holder.tvName = (TextView) v.findViewById(R.id.tvName);
+            holder.cbBought = (CheckBox) v.findViewById(R.id.cbBought);
+            int id = Resources.getSystem().getIdentifier("btn_check_holo_light", "drawable", "android");
+            holder.cbBought.setButtonDrawable(id);
             v.setTag(holder);
         }
 
-        Item item = itemsList.get(position);
+        final Item item = itemsList.get(position);
+
 
         if (item != null) {
+
             ViewHolder holder = (ViewHolder) v.getTag();
-            holder.tvName.setText(item.getName());
-            holder.tvQuantity.setText(Short.toString(item.getQuantity()));
+            holder.tvName.setText("Item: " + item.getName());
+            holder.tvQuantity.setText("Quantity: " + Integer.toString(item.getQuantity()));
             holder.ivIcon.setImageResource(item.getType().getIconId());
+
+            // https://stackoverflow.com/questions/3149414/how-to-receive-a-event-on-android-checkbox-check-change
+            holder.cbBought.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    item.setBought(isChecked);
+                }
+            });
         }
 
         return v;
