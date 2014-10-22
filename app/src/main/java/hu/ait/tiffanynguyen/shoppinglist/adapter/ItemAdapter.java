@@ -49,14 +49,13 @@ public class ItemAdapter extends BaseAdapter {
         itemsList.add(p);
     }
 
-    public void removeChecked() {
-        int size = itemsList.size();
-        for (int i = 0; i < size; i++) {
-            if (itemsList.get(i).isBought()) {
-                itemsList.remove(i--);
-                size--;
-            }
-        }
+    public boolean isChecked(int position) {
+        return itemsList.get(position).isBought();
+    }
+
+    public void removeItem(int position) {
+        if (position < itemsList.size())
+            itemsList.remove(position);
     }
 
     public static class ViewHolder {

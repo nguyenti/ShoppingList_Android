@@ -37,14 +37,21 @@ public class Item implements Serializable {
         public int getIconId() {
             return iconId;
         }
+
+        public int getValue() {
+            return value;
+        }
     }
 
     private ItemType type;
+    private long id;
     private String name;
     private String description;
     private int quantity;
     private float price;
     private boolean bought;
+
+    public Item() {}
 
     public Item(ItemType type, String name, String description, int quantity, float price) {
         this.type = type;
@@ -53,6 +60,10 @@ public class Item implements Serializable {
         this.quantity = quantity;
         this.price = price;
         this.bought = false;
+    }
+
+    public long getId() {
+        return id;
     }
 
     public ItemType getType() {
@@ -81,5 +92,37 @@ public class Item implements Serializable {
 
     public void setBought(boolean bought) {
         this.bought = bought;
+    }
+
+    public void setBought(int bought) {
+        this.bought = (bought == 1);
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public void setType(ItemType type) {
+        this.type = type;
+    }
+
+    public void setType(int type) {
+        this.type = ItemType.fromInt(type);
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    public void setPrice(float price) {
+        this.price = price;
     }
 }

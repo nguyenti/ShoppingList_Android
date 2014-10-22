@@ -4,8 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputFilter;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -13,10 +11,8 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import java.util.Date;
-
-import hu.ait.tiffanynguyen.shoppinglist.adapter.MoneyValueFilter;
 import hu.ait.tiffanynguyen.shoppinglist.data.Item;
+import hu.ait.tiffanynguyen.shoppinglist.filter.MoneyValueFilter;
 
 
 public class CreateNewItemActivity extends Activity {

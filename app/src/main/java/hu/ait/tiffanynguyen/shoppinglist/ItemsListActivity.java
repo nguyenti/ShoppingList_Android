@@ -6,6 +6,7 @@ import android.app.ListActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
@@ -17,20 +18,39 @@ import java.util.List;
 
 import hu.ait.tiffanynguyen.shoppinglist.adapter.ItemAdapter;
 import hu.ait.tiffanynguyen.shoppinglist.data.Item;
+import hu.ait.tiffanynguyen.shoppinglist.data.ItemDataSource;
 
 
 public class ItemsListActivity extends ListActivity {
 
     public static final int REQUEST_NEW_ITEM = 100;
     public static final int DELETE_ITEMS = 10;
+    private ItemDataSource datasource;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        List<Item> itemList = new ArrayList<Item>();
+        datasource = new ItemDataSource(this);
+        datasource.open();
+        Log.i("LOG_ONRESUME", "OPEN");
+        List<Item> itemList = datasource.getAllItems();//new ArrayList<Item>();
 
         setListAdapter(new ItemAdapter(getApplicationContext(),itemList));
+    }
+//
+//    @Override
+//    protected void onResume() {
+//        datasource.open();
+//        Log.i("LOG_ONRESUME", "OPEN");
+//        super.onResume();
+//    }
+
+    @Override
+    protected void onDestroy() {
+        datasource.close();
+        Log.i("LOG_ONDESTROY", "CLOSe");
+        super.onDestroy();
     }
 
     @Override
@@ -38,8 +58,11 @@ public class ItemsListActivity extends ListActivity {
         if (resultCode == RESULT_OK) {
             Item p = (Item) data.getSerializableExtra("KEY_ITEM");
 
-            ((ItemAdapter) getListAdapter()).addItem(p);
-            ((ItemAdapter) getListAdapter()).notifyDataSetChanged();
+            ItemAdapter adapter = (ItemAdapter) getListAdapter();
+            Item item = null;
+            item = datasource.createItem(p);
+            adapter.addItem(item);
+            adapter.notifyDataSetChanged();
 
         } else if (resultCode == RESULT_CANCELED) {
             Toast.makeText(this, "Cancelled", Toast.LENGTH_LONG).show();
@@ -58,6 +81,8 @@ public class ItemsListActivity extends ListActivity {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
+
+
         int id = item.getItemId();
         if (id == R.id.action_new_item) {
             Intent i = new Intent();
@@ -76,7 +101,16 @@ public class ItemsListActivity extends ListActivity {
             adb.setNegativeButton("Cancel", null);
             adb.setPositiveButton("Ok", new AlertDialog.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {
-                    ((ItemAdapter) getListAdapter()).removeChecked();
+                    ItemAdapter adapter = (ItemAdapter) getListAdapter();
+                    Item item = null;
+                    for (int i = 0; i < adapter.getCount(); i++) {
+                        if (adapter.isChecked(i)) {
+                            item = (Item) adapter.getItem(i);
+                            datasource.deleteItem(item);
+                            adapter.removeItem(i--);
+                        }
+                    }
+//                    ((ItemAdapter) getListAdapter()).removeChecked();
                     ((ItemAdapter) getListAdapter()).notifyDataSetChanged();
                 }});
             adb.show();
