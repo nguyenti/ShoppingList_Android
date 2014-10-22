@@ -20,7 +20,6 @@ import hu.ait.tiffanynguyen.shoppinglist.adapter.ItemAdapter;
 
 public class LoginActivity extends Activity {
 
-    private boolean firstTime = false;
     private final String PREF_NAME = "MyPassword";
 
     @Override
@@ -29,7 +28,7 @@ public class LoginActivity extends Activity {
         setContentView(R.layout.activity_login);
         final SharedPreferences sp =
                 getSharedPreferences(PREF_NAME, MODE_PRIVATE);
-        if (!firstTime) {
+        if (sp.getBoolean("my_first_time", true)) {
             final EditText input = new EditText(this);
             input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
             new AlertDialog.Builder(LoginActivity.this)
@@ -46,7 +45,7 @@ public class LoginActivity extends Activity {
                     })
                     .setNegativeButton("Cancel", null)
                     .show();
-            firstTime = true;
+            sp.edit().putBoolean("my_first_time", false).commit();
         }
 
         final String pwd = sp.getString("password", null);
