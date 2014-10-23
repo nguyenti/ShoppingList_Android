@@ -1,19 +1,18 @@
 package hu.ait.tiffanynguyen.shoppinglist;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import hu.ait.tiffanynguyen.shoppinglist.adapter.ItemAdapter;
@@ -24,7 +23,6 @@ import hu.ait.tiffanynguyen.shoppinglist.data.ItemDataSource;
 public class ItemsListActivity extends ListActivity {
 
     public static final int REQUEST_NEW_ITEM = 100;
-    public static final int DELETE_ITEMS = 10;
     private ItemDataSource datasource;
 
     @Override
@@ -33,23 +31,30 @@ public class ItemsListActivity extends ListActivity {
 
         datasource = new ItemDataSource(this);
         datasource.open();
-        Log.i("LOG_ONRESUME", "OPEN");
         List<Item> itemList = datasource.getAllItems();//new ArrayList<Item>();
-
         setListAdapter(new ItemAdapter(getApplicationContext(),itemList));
+
+        ListView lv = getListView();
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View view,
+                                    int position, long id) {
+                // selected item
+                Item item = (Item) getListAdapter().getItem(position);
+
+                // Launching new Activity on selecting single List Item
+                Intent i = new Intent(getBaseContext(), ItemDetailActivity.class);
+                // sending data to new activity
+                i.putExtra("item", item);
+                startActivity(i);
+            }
+        });
+
+//        CheckBox cb = get
     }
-//
-//    @Override
-//    protected void onResume() {
-//        datasource.open();
-//        Log.i("LOG_ONRESUME", "OPEN");
-//        super.onResume();
-//    }
 
     @Override
     protected void onDestroy() {
         datasource.close();
-        Log.i("LOG_ONDESTROY", "CLOSe");
         super.onDestroy();
     }
 
@@ -97,12 +102,12 @@ public class ItemsListActivity extends ListActivity {
             */
             AlertDialog.Builder adb=new AlertDialog.Builder(ItemsListActivity.this);
             adb.setTitle("Delete?");
-            adb.setMessage("Are you sure you want to delete the selected items?");
+            adb.setMessage("Are you sure you want to delete the selected item(s)?");
             adb.setNegativeButton("Cancel", null);
             adb.setPositiveButton("Ok", new AlertDialog.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {
                     ItemAdapter adapter = (ItemAdapter) getListAdapter();
-                    Item item = null;
+                    Item item;
                     for (int i = 0; i < adapter.getCount(); i++) {
                         if (adapter.isChecked(i)) {
                             item = (Item) adapter.getItem(i);
@@ -110,7 +115,25 @@ public class ItemsListActivity extends ListActivity {
                             adapter.removeItem(i--);
                         }
                     }
-//                    ((ItemAdapter) getListAdapter()).removeChecked();
+                    ((ItemAdapter) getListAdapter()).notifyDataSetChanged();
+                }});
+            adb.show();
+            ((ItemAdapter) getListAdapter()).notifyDataSetChanged();
+            return true;
+        } else if (id == R.id.action_delete_all) {
+            AlertDialog.Builder adb=new AlertDialog.Builder(ItemsListActivity.this);
+            adb.setTitle("Delete?");
+            adb.setMessage("Are you sure you want to delete all items?");
+            adb.setNegativeButton("Cancel", null);
+            adb.setPositiveButton("Ok", new AlertDialog.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    ItemAdapter adapter = (ItemAdapter) getListAdapter();
+                    Item item;
+                    for (int i = 0; i < adapter.getCount(); i++) {
+                        item = (Item) adapter.getItem(i);
+                        datasource.deleteItem(item);
+                        adapter.removeItem(i--);
+                    }
                     ((ItemAdapter) getListAdapter()).notifyDataSetChanged();
                 }});
             adb.show();

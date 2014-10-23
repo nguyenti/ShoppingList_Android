@@ -44,6 +44,8 @@
         android:scaleX="1.70"
         android:scaleY="1.70"
         android:layout_gravity="center_vertical"
-        android:layout_weight="10"/>
+        android:layout_weight="10"
+        android:gravity="right"
+        android:focusable="false" />
 
 </LinearLayout>

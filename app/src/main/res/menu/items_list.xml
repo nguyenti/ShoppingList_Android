@@ -10,6 +10,9 @@
         android:icon="@drawable/ic_action_discard"
         android:orderInCategory="100"
         android:showAsAction="ifRoom"
-        android:title="Deleted checked items" />
-
+        android:title="Delete checked items" />
+    <item android:id="@+id/action_delete_all"
+        android:orderInCategory="150"
+        android:showAsAction="ifRoom"
+        android:title="Delete all" />
 </menu>

@@ -16,6 +16,7 @@ import java.util.List;
 
 import hu.ait.tiffanynguyen.shoppinglist.R;
 import hu.ait.tiffanynguyen.shoppinglist.data.Item;
+import hu.ait.tiffanynguyen.shoppinglist.data.ItemDataSource;
 
 /**
  * Created by tiffanynguyen on 10/16/14.
@@ -85,18 +86,19 @@ public class ItemAdapter extends BaseAdapter {
 
         final Item item = itemsList.get(position);
 
-
         if (item != null) {
 
             ViewHolder holder = (ViewHolder) v.getTag();
             holder.tvName.setText("Item: " + item.getName());
             holder.tvQuantity.setText("Quantity: " + Integer.toString(item.getQuantity()));
             holder.ivIcon.setImageResource(item.getType().getIconId());
+            holder.cbBought.setChecked(item.isBought());
 
             // https://stackoverflow.com/questions/3149414/how-to-receive-a-event-on-android-checkbox-check-change
             holder.cbBought.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     item.setBought(isChecked);
+                    notifyDataSetChanged();
                 }
             });
         }

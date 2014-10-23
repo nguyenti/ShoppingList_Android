@@ -1,7 +1,8 @@
 package hu.ait.tiffanynguyen.shoppinglist.filter;
 
 /**
- * Created by tiffanynguyen on 10/18/14.
+ * Gotten from:
+ * https://stackoverflow.com/questions/5357455/limit-decimal-places-in-android-edittext
  */
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;

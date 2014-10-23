@@ -33,15 +33,15 @@
         android:layout_height="wrap_content" />
 
     <EditText
-        android:id="@+id/etItemDesc"
-        android:hint="Descrpition"
+        android:id="@+id/etItemPrice"
+        android:hint="Price"
+        android:inputType="numberDecimal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
     <EditText
-        android:id="@+id/etItemPrice"
-        android:hint="Price"
-        android:inputType="numberDecimal"
+        android:id="@+id/etItemDesc"
+        android:hint="Description (optional)"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
@@ -50,5 +50,15 @@
         android:text="Save"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
+
+    <ImageView
+        android:id="@+id/ivCreate"
+        android:background="@drawable/arrow"
+        android:layout_width="120dp"
+        android:layout_height="100dp"
+        android:layout_margin="30dp"
+        android:adjustViewBounds="true"
+        android:scaleType="fitCenter"
+        android:layout_gravity="center"/>
 
 </LinearLayout>
