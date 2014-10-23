@@ -95,9 +95,10 @@ public class ItemAdapter extends BaseAdapter {
             holder.cbBought.setChecked(item.isBought());
 
             // https://stackoverflow.com/questions/3149414/how-to-receive-a-event-on-android-checkbox-check-change
-            holder.cbBought.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    item.setBought(isChecked);
+            holder.cbBought.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    item.setBought(!item.isBought());
                     notifyDataSetChanged();
                 }
             });

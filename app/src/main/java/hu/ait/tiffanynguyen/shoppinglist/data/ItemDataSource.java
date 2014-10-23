@@ -75,6 +75,32 @@ public class ItemDataSource {
                 + " = " + id, null);
     }
 
+    public void changeBought(int position, boolean value) {
+        Cursor cursor = database.query(ItemTable.TABLE_ITEM,
+                allColumns, null, null, null, null, null);
+
+        cursor.moveToFirst();
+        int i = 0;
+        while (i++ < position) {
+            if (cursor.isAfterLast()) {
+                cursor.close();
+                return;
+            }
+            cursor.moveToNext();
+        }
+        Item item = cursorToItem(cursor);
+        ContentValues values = new ContentValues();
+        values.put(ItemTable.COLUMN_NAME, item.getName());
+        values.put(ItemTable.COLUMN_DESC, item.getDescription());
+        values.put(ItemTable.COLUMN_TYPE, item.getType().getValue());
+        values.put(ItemTable.COLUMN_QUANTITY, item.getQuantity());
+        values.put(ItemTable.COLUMN_PRICE, item.getPrice());
+        values.put(ItemTable.COLUMN_BOUGHT, value);
+
+        database.update(ItemTable.TABLE_ITEM, values, ItemTable.COLUMN_ID + "=" + item.getId(), null);
+
+    }
+
     public List<Item> getAllItems() {
         List<Item> items = new ArrayList<Item>();
 

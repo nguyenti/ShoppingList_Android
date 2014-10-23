@@ -5,6 +5,7 @@ import android.app.ListActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -31,7 +32,7 @@ public class ItemsListActivity extends ListActivity {
 
         datasource = new ItemDataSource(this);
         datasource.open();
-        List<Item> itemList = datasource.getAllItems();//new ArrayList<Item>();
+        List<Item> itemList = datasource.getAllItems();
         setListAdapter(new ItemAdapter(getApplicationContext(),itemList));
 
         ListView lv = getListView();
@@ -54,6 +55,11 @@ public class ItemsListActivity extends ListActivity {
 
     @Override
     protected void onDestroy() {
+        List<Item> itemList = datasource.getAllItems();
+
+        for (int i = 0; i < itemList.size(); i++) {
+            datasource.changeBought(i, ((Item) getListAdapter().getItem(i)).isBought());
+        }
         datasource.close();
         super.onDestroy();
     }
@@ -64,7 +70,7 @@ public class ItemsListActivity extends ListActivity {
             Item p = (Item) data.getSerializableExtra("KEY_ITEM");
 
             ItemAdapter adapter = (ItemAdapter) getListAdapter();
-            Item item = null;
+            Item item;
             item = datasource.createItem(p);
             adapter.addItem(item);
             adapter.notifyDataSetChanged();
